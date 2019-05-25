@@ -1,7 +1,5 @@
 # Tiny OpenEXR image library.
 
-[![Total alerts](https://img.shields.io/lgtm/alerts/g/syoyo/tinyexr.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/syoyo/tinyexr/alerts/)
-
 ![Example](https://github.com/syoyo/tinyexr/blob/master/asakusa.png?raw=true)
 
 [![AppVeyor build status](https://ci.appveyor.com/api/projects/status/k07ftfe4ph057qau/branch/master?svg=true)](https://ci.appveyor.com/project/syoyo/tinyexr/branch/master)
@@ -74,8 +72,6 @@ Current status of `tinyexr` is:
 * Godot. Multi-platform 2D and 3D game engine https://godotengine.org/
 * Filament. PBR engine. https://github.com/google/filament
 * PyEXR. Loading OpenEXR (.exr) images using Python. https://github.com/ialhashim/PyEXR
-* The-Forge. The Forge Cross-Platform Rendering Framework PC, Linux, Ray Tracing, macOS / iOS, Android, XBOX, PS4 https://github.com/ConfettiFX/The-Forge
-* Your project here!
 
 ## Older TinyEXR(v0.9.0)
 
@@ -91,7 +87,6 @@ Current status of `tinyexr` is:
 * [examples/exr2rgbe/](examples/exr2rgbe) EXR to .hdr converter
 * [examples/ldr2exr/](examples/exr2rgbe) LDR to EXR converter
 * [examples/exr2ldr/](examples/exr2ldr) EXR to LDR converter
-* [examples/cube2longlat/](examples/cube2longlat) Cubemap to longlat(equirectangler) converter
 
 ## Experimental
 
@@ -103,7 +98,7 @@ NOTE: **API is still subject to change**. See the source code for details.
 
 Include `tinyexr.h` with `TINYEXR_IMPLEMENTATION` flag(do this only for **one** .cc file).
 
-```cpp
+```
 //Please include your own zlib-compatible API header before
 //including `tinyexr.h` when you disable `TINYEXR_USE_MINIZ`
 //#define TINYEXR_USE_MINIZ 0
@@ -120,32 +115,21 @@ Include `tinyexr.h` with `TINYEXR_IMPLEMENTATION` flag(do this only for **one** 
 
 ### Quickly reading RGB(A) EXR file.
 
-```cpp
+```
   const char* input = "asakusa.exr";
   float* out; // width * height * RGBA
   int width;
   int height;
-  const char* err = NULL; // or nullptr in C++11
+  const char* err;
 
   int ret = LoadEXR(&out, &width, &height, input, &err);
-
-  if (ret != TINYEXR_SUCCESS) {
-    if (err) {
-       fprintf(stderr, "ERR : %s\n", err);
-       FreeEXRErrorMessage(err); // release memory of error message.
-    }
-  } else {
-    ...
-    free(out); // relase memory of image data
-  }
-
 ```
 
 ### Loading Singlepart EXR from a file.
 
 Scanline and tiled format are supported.
 
-```cpp
+```
   // 1. Read EXR version.
   EXRVersion exr_version;
 
@@ -185,7 +169,6 @@ Scanline and tiled format are supported.
   ret = LoadEXRImageFromFile(&exr_image, &exr_header, argv[1], &err);
   if (ret != 0) {
     fprintf(stderr, "Load EXR err: %s\n", err);
-    FreeEXRHeader(&exr_header);
     FreeEXRErrorMessage(err); // free's buffer for an error message 
     return ret;
   }
@@ -196,14 +179,13 @@ Scanline and tiled format are supported.
 
   // 4. Free image data
   FreeEXRImage(&exr_image);
-  FreeEXRHeader(&exr_header);
 ```
 
 ### Loading Multipart EXR from a file.
 
 Scanline and tiled format are supported.
 
-```cpp
+```
   // 1. Read EXR version.
   EXRVersion exr_version;
 
@@ -271,7 +253,7 @@ Scanline and tiled format are supported.
 
 Saving Scanline EXR file.
 
-```cpp
+```
   // See `examples/rgbe2exr/` for more details.
   bool SaveEXR(const float* rgb, int width, int height, const char* outfilename) {
 
@@ -340,7 +322,7 @@ Saving Scanline EXR file.
 Reading deep image EXR file.
 See `example/deepview` for actual usage.
 
-```cpp
+```
   const char* input = "deepimage.exr";
   const char* err = NULL; // or nullptr
   DeepImage deepImage;
